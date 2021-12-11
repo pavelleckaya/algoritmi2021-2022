@@ -3,7 +3,7 @@
     #include <stack>
     #include <string>
     #include <cstring>
-     
+	#include <climits> 
     struct Node {
     	int num;
     	Node* link = nullptr;
@@ -12,42 +12,41 @@
     class Stack {
     public:
 	~Stack(){
-	    this->Clear();
+	    Clear();
 	}
     	void Push( int n ) {
-    		new_element = new Node();
+    		Node* new_element = new Node();
     		new_element->num = n;
     		new_element->link = last_link;
     		last_link = new_element;
-    		std::cout << "ok" << '\n';
     		size += 1;
     	}
     	void Pop() {
     		if (size == 0) {
-    			std::cout << "error" << '\n';
-    		}
+   				std::cout << "error" << '\n'; 		
+			}
     		else {
-    			std::cout << last_link->num << '\n';
-    			link_delete = last_link;
+				std::cout << last_link->num << '\n';
+    			Node* link_delete = last_link;
     			last_link = last_link->link;
     			size -= 1;
     			delete link_delete;
     		}
     	}
-    	void Back() {
+    	void Back(){
     		if (size == 0) {
-    			std::cout << "error" << '\n';
+				std::cout << "error" << '\n';
     		}
     		else {
-    			std::cout << last_link->num << '\n';
+				std::cout << last_link->num << '\n';
     		}
     	}
-    	void Size() {
-    		std::cout << size << '\n';
+    	int Size() {
+    	    return size;
     	}
     	void Clear() {
     		while (size!=0) {
-    			link_delete = last_link;
+    			Node* link_delete = last_link;
     			last_link = last_link->link;
     			delete link_delete;
     			size -= 1;
@@ -55,13 +54,11 @@
     	}
     private:
     	int size = 0;
-    	Node* new_element = new Node();
-    	Node* last_link = new_element->link;
-    	Node* link_delete = nullptr;
+    	Node* last_link = new Node();
     };
      
     int main() {
-    	Stack stack;
+    Stack stack;
 	std::string str;
     	std::cin >> str;
     	while (str != "exit") {
@@ -69,6 +66,7 @@
     			int n;
     			std::cin >> n;
     			stack.Push(n);
+				std::cout << "ok" << '\n';
     		}
     		if (str == "pop") {
     			stack.Pop();
@@ -77,11 +75,12 @@
     			stack.Back();
     		}
     		if (str == "size") {
-    			stack.Size();
+    			int size = stack.Size();
+				std::cout << size << '\n';
     		}
     		if (str == "clear") {
     			stack.Clear();
-			std::cout << "ok" << '\n';
+				std::cout << "ok" << '\n';
     		}
     		std::cin >> str;
     	}
