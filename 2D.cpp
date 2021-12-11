@@ -2,17 +2,19 @@
 #include <iostream>
 #include <vector>
 
-struct Binary_heap{
-    void insert(long long num){
-        heap.push_back({num, number});
-	heap_size++;
-	number++;
-	pointer.push_back(heap_size);
-	siftup(heap_size);
+class CamelCase{
+public:
+    int insert(long long num){
+        heap.push_back({num, request_number});
+		heap_size++;
+		request_number++;
+		pointer.push_back(heap_size);
+		siftup(heap_size);
+		return request_number - 1;
     }
 
     long long getMin(){
-	number++;
+	request_number++;
 	pointer.push_back(0);
         return heap[1].first;
     }
@@ -21,29 +23,29 @@ struct Binary_heap{
 	exchange(1,heap_size);
 	heap_size--;
 	heap.resize(heap_size + 1);
-	number++;
+	request_number++;
 	pointer.push_back(0);
         siftdown(1);
     }
 
     void decreaseKey(long num, long long del){
         heap[pointer[num]].first -= del;
-	siftup(pointer[num]);
-	number++;
-	pointer.push_back(0);
+		siftup(pointer[num]);
+		request_number++;
+		pointer.push_back(0);
     }
 
 private:
     std::vector<std::pair<long long, long long> > heap = {{0,0}};
     long long heap_size = 0;
     std::vector<long long> pointer = {0};
-    long long number = 1;
+    long long request_number = 1;
 
     void siftup(long long poz){
     	while(poz != 1 && heap[poz].first < heap[poz/2].first){
-	    exchange(pointer[heap[poz].second], pointer[heap[poz/2].second]);
-	    poz /= 2;
-	}	
+	   		exchange(pointer[heap[poz].second], pointer[heap[poz/2].second]);
+	    	poz /= 2;
+		}	
     } 
     
     void siftdown(long long poz){
@@ -74,7 +76,7 @@ int main(){
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(0);
     std::cout.tie(0);
-    Binary_heap myheap;
+    CamelCase myheap;
     long long n;
     std::cin >> n;
     for(int i = 0; i < n; ++i){
@@ -83,7 +85,7 @@ int main(){
 	if(request == "insert"){
 	    long long num;
 	    std::cin >> num;
- 	    myheap.insert(num);
+ 	    num = myheap.insert(num);
 	}
 	else if(request == "getMin"){
 	    std::cout << myheap.getMin() << '\n';
