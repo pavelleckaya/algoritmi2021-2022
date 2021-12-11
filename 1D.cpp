@@ -22,13 +22,14 @@
     		}
     		
     	}
-    	void Pop_gob() {
-    		std::cout << queue1.front() << '\n';
+    	int Pop_gob() {
+    		int gobil = queue1.front();
     		queue1.pop_front();
     		if (queue1.size() < queue2.size()) {
     			queue1.push_back(queue2.front());
     			queue2.pop_front();
     		}
+			return gobil;
     	}
     };
      
@@ -42,12 +43,13 @@
     	for (int i = 0;i < n;++i) {
     		std::cin >> znach;
     		if (znach == '*') {
-			int numgob;
-			std::cin >> numgob;
+				int numgob;
+				std::cin >> numgob;
     			och.Push_priviliged_gob(numgob);	
     		}
     		else if (znach == '-') {
-    			och.Pop_gob();
+    			int gobil = och.Pop_gob();
+				std::cout << gobil << '\n';
     		}
     		else if (znach == '+') {
     			int numgob;
