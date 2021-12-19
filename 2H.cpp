@@ -2,13 +2,12 @@
 #include <cmath>
 #include <vector>
 
-int element_LSD(std::vector<long long>& LSD, int j, int i){
+int element_LSD(std::vector<long long>& LSD, int j, int i, int def){
 	long long num = LSD[i];
 	for(int z = 0; z < j; ++z){
-		num /= 256;
+		num /= def;
 	}
-	return num % 256;
-
+	return num % def;
 }
 
 void LSD_sort(std::vector<long long>& LSD, int n){ 
@@ -18,15 +17,14 @@ void LSD_sort(std::vector<long long>& LSD, int n){
 		std::vector<long long> ans(n);
         std::vector<int> cnt(def);
         for(int i = 0; i < n; ++i){
-      		int k = element_LSD(LSD, j, i);
+      		int k = element_LSD(LSD, j, i, def);
 			cnt[k]++;			
 		}
         for(int i = 1; i < def; ++i){
             cnt[i] += cnt[i-1];
         }
-    
         for(int i = n - 1; i >= 0; --i){
-	    	int k = element_LSD(LSD, j, i);
+	    	int k = element_LSD(LSD, j, i, def);
 			ans[--cnt[k]] = LSD[i];
 		}
 		LSD = ans;
