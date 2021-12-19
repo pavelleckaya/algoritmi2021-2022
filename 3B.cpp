@@ -6,11 +6,9 @@ class Fenvik{
 private:
 	vector<int> array_fenvik;
 public:
-	Fenvik(int n): array_fenvik(n){}
+	Fenvik(int, vector<int>&);
 
 	~Fenvik(){}
-
-	void new_f(int, vector<int>&);
 
 	int getSum(int, int, vector<int>&);
 
@@ -23,6 +21,17 @@ int f(int i){
 
 int g(int i){
 	return i | (i + 1);
+}
+
+Fenvik::Fenvik(int n, vector<int>& pref): array_fenvik(n){
+	for(int i = 0; i < n; ++i){
+		if(f(i) == 0){
+			array_fenvik[i] = pref[i];
+		}
+		else{
+			array_fenvik[i] = pref[i] - pref[f(i) - 1];
+		}
+	}
 }
 
 int Fenvik::getSum(int left,int right, vector<int>& array){
@@ -59,22 +68,10 @@ void Fenvik::update(int pos, int del){
 	}
 }
 
-void Fenvik::new_f(int n, vector<int>& pref){
-	for(int i = 0; i < n; ++i){
-		if(f(i) == 0){
-			array_fenvik[i] = pref[i];
-		}
-		else{
-			array_fenvik[i] = pref[i] - pref[f(i) - 1];
-		}
-	}
-}
-
 int main(){
 	int n;
 	std::cin >> n;
 	vector<int> array(n);
-	Fenvik fenvik(n);
 	vector<int> pref(n);
 	std::cin >> array[0];
 	pref[0] = array[0];
@@ -82,7 +79,7 @@ int main(){
 		std::cin >> array[i];
 		i%2==0 ? pref[i] = pref[i - 1] + array[i] : pref[i] = pref[i - 1] - array[i];
 	}
-	fenvik.new_f(n, pref);
+	Fenvik fenvik(n, pref);
 	int m;
 	std::cin >> m;
 	for(int i = 0; i < m; ++i){
