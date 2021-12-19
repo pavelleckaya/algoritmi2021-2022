@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 
-class CamelCase{
+class BinaryHeap{
 public:
     int insert(long long num){
         heap.push_back({num, request_number});
@@ -76,7 +76,7 @@ int main(){
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(0);
     std::cout.tie(0);
-    CamelCase myheap;
+    BinaryHeap myheap;
     long long n;
     std::cin >> n;
     for(int i = 0; i < n; ++i){
