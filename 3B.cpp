@@ -6,7 +6,7 @@ class Fenvik{
 private:
 	vector<int> array_fenvik;
 public:
-	Fenvik(int, vector<int>&);
+	Fenvik(const vector<int>&);
 
 	~Fenvik(){}
 
@@ -23,8 +23,13 @@ int g(int i){
 	return i | (i + 1);
 }
 
-Fenvik::Fenvik(int n, vector<int>& pref): array_fenvik(n){
-	for(int i = 0; i < n; ++i){
+Fenvik::Fenvik(const vector<int>& array): array_fenvik(array.size()){
+	vector<int> pref(array.size());
+	pref[0] = array[0];
+	for(int i = 1; i < array.size(); ++i){
+		i%2==0 ? pref[i] = pref[i - 1] + array[i] : pref[i] = pref[i - 1] - array[i];
+	}
+	for(int i = 0; i < array.size(); ++i){
 		if(f(i) == 0){
 			array_fenvik[i] = pref[i];
 		}
@@ -72,14 +77,10 @@ int main(){
 	int n;
 	std::cin >> n;
 	vector<int> array(n);
-	vector<int> pref(n);
-	std::cin >> array[0];
-	pref[0] = array[0];
-	for(int i = 1; i < n; ++i){
+	for(int i = 0; i < n; ++i){
 		std::cin >> array[i];
-		i%2==0 ? pref[i] = pref[i - 1] + array[i] : pref[i] = pref[i - 1] - array[i];
 	}
-	Fenvik fenvik(n, pref);
+	Fenvik fenvik(array);
 	int m;
 	std::cin >> m;
 	for(int i = 0; i < m; ++i){
