@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+bool par(int first, int second) {
+	return first >= second;
+}
+
+std::vector<int> NNVP(int n, std::vector<int>& array_nnvp) {
+	std::vector<int> last_i_element(n); // last_i_element[i] - индекс из array_nnvp элементa которым кончается ннвп длинны i
+	std::vector<int> grendparents(n); // grenparents[i] - элемент предшествующий в ннвп эл-ту из array_nnvp[last_i_element[i]]  
+	std::vector<int> dp(n, -(1 << 31)); //dp[i] - максимальный последний элемент в невозраст. подпосл. длинны i
+	std::vector<int> dp_index(n);
+	for (int i = 0; i < n; ++i) {
+		auto k = lower_bound(dp.begin(), dp.end(), array_nnvp[i], par);
+		if (k != dp.end()) {
+			int index = k - dp.begin();
+			if (dp[index] == -(1 << 31)) {
+				last_i_element[index] = i;
+			}
+			dp[index] = array_nnvp[i];
+			dp_index[index] = i;
+			if (index != 0) {
+				grendparents[i] = dp_index[index - 1];
+			}
+		}
+	}
+	int i = 0;
+	while (i != n && dp[i] != -(1 << 31)) {
+		i += 1;
+	}
+	std::vector<int> ans(i);
+	ans[0] = last_i_element[i - 1]; // востонавление ответа
+	int lol = grendparents[last_i_element[i - 1]];
+	for (int j = 1; j < i; ++j) {
+		ans[j] = lol;
+		lol = grendparents[lol];
+	}
+	return ans;
+}
+
+int main() {
+	int n;
+	std::cin >> n;
+	std::vector<int> array_nnvp(n);
+	for (int i = 0; i < n; ++i) {
+		std::cin >> array_nnvp[i];
+	}
+	std::vector<int> ans = NNVP(n, array_nnvp);
+	std::cout << ans.size() << '\n';
+	for (int j = ans.size() - 1; j >= 0; --j) {
+		std::cout << ans[j] + 1 << ' ';
+	}
+}
