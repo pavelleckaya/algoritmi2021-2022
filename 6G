@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+
+bool bit(int mask, std::pair<int, bool>& pair) {
+    return (((mask >> pair.first) & 1) == pair.second);
+}
+
+bool is_true(int mask, std::vector < std::pair<int, bool> >& dp) { // могут быть равны ли mask и dp
+    for (int j = 0; j < dp.size(); ++j) {
+        if (!bit(mask, dp[j])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is_one(int mask, int n) { // проверка маска вида 1010101010... или нет
+    for (int i = 0; i < n - 1; ++i) {
+        if (((mask >> i) & 1) == ((mask >> (i + 1)) & 1)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+long long ful_mask(int mask, int m, int n, std::vector<std::vector<std::pair<int, bool>>>& dp) { 
+    // проверка можно ли сделать из обратных маско весь прямоугольнике, то есть mask -> ~(mask) -> mask -> ...
+    if (!is_one(mask, n)) {
+        return 0;
+    }
+    for (int i = 0; i < m; ++i) {
+        if (!is_true(mask, dp[i])) {
+            return 0;
+        }
+        mask = ~(mask);
+    }
+    return 1;
+}
+
+long long edent_mask(int mask, int m, std::vector<std::vector<std::pair<int, bool>>>& dp) {
+    // склько вариантов создать прямогольник из масок вида 10101010... и 010101010...
+    long long ans = 1;
+    for (int i = 0; i < m; ++i) {
+        int f = 0; 
+        if (is_true(mask, dp[i])) {
+            f += 1;
+        }
+        if (is_true(~(mask), dp[i])) {
+            f += 1;
+        }
+        ans *= f;
+        ans %= 1000000007;
+    }
+    return ans;
+}
+long long Golod(int n, int m, std::vector < std::vector < std::pair<int, bool> > >& dp){
+    // Заметим что если маска не вида 10101010... или 010101010... то мы можем получить заполненный прямоугольник 
+    // только масками вида mask -> ~mask -> mask -> ~mask -> ...
+    // Если же маски вида 10101010... или 010101010... то они могут идти за друг другом в любом порядке
+    if (m == 0 || n == 0) {
+        return 0;
+    }
+    long long ans = 0;
+    for (int mask = 0; mask < (1 << n); ++mask) {
+        ans += ful_mask(mask, m, n, dp);
+    }
+    int mask = 0;
+    for (int i = 0; i < n; i += 2) { // делаем маску 10101010...
+        mask = (mask | (1 << i));
+    }
+    ans += edent_mask(mask, m, dp);
+    ans %= 1000000007;  
+    return ans;
+}
+
+int main()
+{
+    int n, m;
+    std::cin >> n >> m;
+    std::vector < std::vector < std::pair<int, bool> > > dp(m);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            char c;
+            std::cin >> c;
+            if (c == '+') {
+                dp[j].push_back({ i,  true});
+            }
+            else if (c == '-') {
+                dp[j].push_back({ i, false });
+            }
+        }
+    }
+    long long ans = Golod(n, m, dp);
+    std::cout << ans;
+}
